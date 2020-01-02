@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
+import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -120,11 +122,25 @@ public class MainActivity extends AppCompatActivity {
         delete_all.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(helper == null) { helper = new TestOpenHelper(getApplicationContext()); }
-                SQLiteDatabase db = helper.getWritableDatabase();
-                String sql = "delete from testdb";
-                db.execSQL(sql);
-                Toast.makeText(MainActivity.this, "全削除しました", Toast.LENGTH_LONG).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("データを全て削除してもよろしいですか？")
+                        .setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if(helper == null) { helper = new TestOpenHelper(getApplicationContext()); }
+                                SQLiteDatabase db = helper.getWritableDatabase();
+                                String sql = "delete from testdb";
+                                db.execSQL(sql);
+                                Toast.makeText(MainActivity.this, "全削除しました", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //全削除をキャンセル
+                            }
+                        });
+                // ダイアログの表示
+                builder.create().show();
             }
         });
 

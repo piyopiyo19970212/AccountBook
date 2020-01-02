@@ -19,11 +19,13 @@ public class TestOpenHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "TestDB.db";
     private static final String TABLE_NAME = "testdb";
     private static final String _ID = "_id";
+    private static final String COLUMN_NAME_TIME = "time";
     private static final String COLUMN_NAME_PURCHASE = "purchase";
     private static final String COLUMN_NAME_PRICE = "price";
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY,"+
+//                    COLUMN_NAME_TIME + " TIME,"+
                     COLUMN_NAME_PURCHASE + " TEXT,"+ COLUMN_NAME_PRICE + " INTEGER)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + TABLE_NAME;
