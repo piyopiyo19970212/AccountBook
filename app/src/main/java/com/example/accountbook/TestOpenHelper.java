@@ -21,9 +21,11 @@ public class TestOpenHelper extends SQLiteOpenHelper{
     private static final String COLUMN_NAME_DATE = "date";
     private static final String COLUMN_NAME_PURCHASE = "purchase";
     private static final String COLUMN_NAME_PRICE = "price";
+    private static final String COLUMN_NAME_IE = "ie";
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY, "+
+                    COLUMN_NAME_IE + " TEXT, "+
                     COLUMN_NAME_DATE + " DATE,"+
                     COLUMN_NAME_PURCHASE + " TEXT,"+
                     COLUMN_NAME_PRICE + " INTEGER)";
