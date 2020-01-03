@@ -40,27 +40,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        /* 更新ボタン */
-//        Button update = findViewById(R.id.update);
-//        update.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String date = dateText.getText().toString();
-//                String purchase = purchaseText.getText().toString();
-//                String price = priceText.getText().toString();
-//                if(purchase.equals("") || price.equals("") || date.equals("")){
-//                    Toast.makeText(MainActivity.this, "入力されていない項目があります", Toast.LENGTH_LONG).show();
-//                }
-//                else { //更新作業
-//                    if(helper == null) { helper = new TestOpenHelper(getApplicationContext()); }
-//                    SQLiteDatabase db = helper.getWritableDatabase();
-//                    String sql = "update testdb set price=\'"+price+"\' where (date=\'"+date+"\' and purchase=\'"+purchase+"\');";
-//                    db.execSQL(sql);
-//                    Toast.makeText(MainActivity.this, "値段を更新しました", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
-//
+        /* 更新ボタン */
+        Button update = findViewById(R.id.update);
+        update.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, com.example.accountbook.Update.class));
+            }
+        });
+
         /* 削除ボタン */
         Button delete = findViewById(R.id.delete);
         delete.setOnClickListener(new OnClickListener() {
@@ -102,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         display.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(MainActivity.this, "DBを表示します", Toast.LENGTH_LONG).show();
                 readData();
             }
         });

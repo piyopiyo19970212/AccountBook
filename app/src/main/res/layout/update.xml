@@ -93,12 +93,12 @@
     </RadioGroup>
 
     <Button
-        android:id="@+id/delete"
+        android:id="@+id/update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_weight="1"
-        android:text="@string/delete"
+        android:text="@string/update"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -110,9 +110,10 @@
         android:layout_height="53dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="128dp"
-        android:text="該当データを削除します"
+        android:text="値段を更新します"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
