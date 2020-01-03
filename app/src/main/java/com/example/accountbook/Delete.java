@@ -1,7 +1,7 @@
 package com.example.accountbook;
 
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Add extends AppCompatActivity {
+public class Delete extends AppCompatActivity {
 
     private TestOpenHelper helper;
     private SQLiteDatabase db;
@@ -24,7 +24,7 @@ public class Add extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add);
+        setContentView(R.layout.delete);
 
         EditText contentsText = findViewById(R.id.input_contents);
         EditText priceText = findViewById(R.id.input_price);
@@ -38,8 +38,8 @@ public class Add extends AppCompatActivity {
             public void onClick(View v) {
                 final Calendar date = Calendar.getInstance();
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        Add.this,
-                        new DatePickerDialog.OnDateSetListener() {
+                        Delete.this,
+                  new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                                 //setした日付を取得して表示
@@ -52,8 +52,8 @@ public class Add extends AppCompatActivity {
             }
         });
 
-        /* 登録作業 */
-        Button add = findViewById(R.id.add);
+        /* 削除作業 */
+        Button add = findViewById(R.id.delete);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,24 +63,29 @@ public class Add extends AppCompatActivity {
                 RadioButton radio = findViewById(rg.getCheckedRadioButtonId());
                 String ie = radio.getText().toString();
                 if(contents.equals("") || price.equals("") || date.equals("")){
-                    Toast.makeText(Add.this, "入力されていない項目があります", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Delete.this, "入力されていない項目があります", Toast.LENGTH_LONG).show();
                 }
-                else { //登録作業
+                else { //削除作業
                     if(helper == null) { helper = new TestOpenHelper(getApplicationContext()); }
                     db = helper.getWritableDatabase();
-                    insertData(db, ie, date, contents, Integer.valueOf(price));
-                    Toast.makeText(Add.this, "登録しました", Toast.LENGTH_LONG).show();
+                    deleteData(db, ie, date, contents, Integer.valueOf(price));
                 }
             }
         });
     }
 
-    private void insertData(SQLiteDatabase db, String ie, String date, String contents, int price) {
-        ContentValues values = new ContentValues();
-        values.put("ie", ie);
-        values.put("date", date);
-        values.put("contents", contents);
-        values.put("price", price);
-        db.insert("testdb", null, values);
+    private void deleteData(SQLiteDatabase db, String ie, String date, String contents, int price) {
+        String sql = "delete from testdb where (" +
+                "ie=\'"+ie+"\' and " +
+                "date=\'"+date+"\' and " +
+                "contents=\'"+contents+"\' and " +
+                "price=\'"+price+"\');";
+        System.out.println(sql);
+        try {
+            db.execSQL(sql);
+            Toast.makeText(Delete.this, "該当データを削除しました", Toast.LENGTH_LONG).show();
+        }catch (SQLException e){
+            Toast.makeText(Delete.this, "該当データはありません", Toast.LENGTH_LONG).show();
+        }
     }
 }

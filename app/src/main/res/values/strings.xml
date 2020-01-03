@@ -2,7 +2,7 @@
     <string name="app_name">AccountBook</string>
     <string name="action_settings">Settings</string>
     <string name="date">日付</string>
-    <string name="purchase">購入品</string>
+    <string name="contents">コンテンツ</string>
     <string name="price">価格</string>
     <string name="add">追加</string>
     <string name="update">更新</string>

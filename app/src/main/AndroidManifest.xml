@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Add"></activity>
+        <activity android:name=".Delete"></activity>
     </application>
 
 </manifest>
