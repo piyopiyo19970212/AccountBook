@@ -1,28 +1,23 @@
 package com.example.accountbook;
 
-import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AlertDialog;
-import android.content.DialogInterface;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
-import android.os.Bundle;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.CountDownTimer;
+import android.icu.util.Calendar;
+import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.contentcapture.ContentCaptureCondition;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.text.InputType;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,26 +31,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         textView = findViewById(R.id.text_view);
 
-
-        /* ツールバー */
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         EditText purchaseText = findViewById(R.id.input_purchase);
         EditText priceText = findViewById(R.id.input_price);
         priceText.setInputType(InputType.TYPE_CLASS_NUMBER); //数字だけ入力させる
+
+        /* 日付の入力 */
+        EditText dateText = findViewById(R.id.input_date);
+        dateText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar date = Calendar.getInstance();
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        MainActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                //setした日付を取得して表示
+                                dateText.setText(String.format("%d / %02d / %02d", year, month+1, dayOfMonth));
+                            }
+                        },
+                        date.get(Calendar.YEAR),
+                        date.get(Calendar.MONTH),
+                        date.get(Calendar.DATE)
+                );
+                datePickerDialog.show();
+            }
+        });
 
         /* 追加ボタン */
         Button register = findViewById(R.id.add);
@@ -64,13 +68,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String purchase = purchaseText.getText().toString();
                 String price = priceText.getText().toString();
-                if(purchase.equals("") || price.equals("")){
+                String date = dateText.getText().toString();
+                if(purchase.equals("") || price.equals("") || date.equals("")){
                     Toast.makeText(MainActivity.this, "入力されていない項目があります", Toast.LENGTH_LONG).show();
                 }
                 else { //登録作業
                     if(helper == null) { helper = new TestOpenHelper(getApplicationContext()); }
                     SQLiteDatabase db = helper.getWritableDatabase();
-                    insertData(db, purchase, Integer.valueOf(price));
+                    insertData(db, date, purchase, Integer.valueOf(price));
                     Toast.makeText(MainActivity.this, price+"円の"+purchase+"を登録しました", Toast.LENGTH_LONG).show();
                 }
             }
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String purchase = purchaseText.getText().toString();
                 String price = priceText.getText().toString();
-                if(purchase.equals("") && price.equals("")){
+                if(purchase.equals("") || price.equals("")){
                     Toast.makeText(MainActivity.this, "入力されていない項目があります", Toast.LENGTH_LONG).show();
                 }
                 else { //更新作業
@@ -161,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
         Cursor cursor = db.query(
                 "testdb",
-                new String[] { "purchase", "price" },
+                new String[] { "date", "purchase", "price" },
                 null,
                 null,
                 null,
@@ -174,8 +179,10 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < cursor.getCount(); i++) {
             sbuilder.append(cursor.getString(0));
+            sbuilder.append("    ");
+            sbuilder.append(cursor.getString(1));
             sbuilder.append(":    ");
-            sbuilder.append(cursor.getInt(1));
+            sbuilder.append(cursor.getInt(2));
             sbuilder.append("円\n");
             cursor.moveToNext();
         }
@@ -185,8 +192,9 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(sbuilder.toString());
     }
 
-    private void insertData(SQLiteDatabase db, String purchase, int price) {
+    private void insertData(SQLiteDatabase db, String date, String purchase, int price) {
         ContentValues values = new ContentValues();
+        values.put("date", date);
         values.put("purchase", purchase);
         values.put("price", price);
         db.insert("testdb", null, values);
