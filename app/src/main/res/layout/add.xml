@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fee"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/input_date"
+        android:layout_width="347dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:autofillHints="@string/date"
+        android:focusable="false"
+        android:hint="@string/date"
+        android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.267" />
+
+    <EditText
+        android:id="@+id/input_contents"
+        android:layout_width="347dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/input_date"
+        android:autofillHints="@string/contents"
+        android:hint="@string/contents"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.341" />
+
+    <EditText
+        android:id="@+id/input_price"
+        android:layout_width="347dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/input_contents"
+        android:autofillHints="@string/price"
+        android:hint="@string/price"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.414" />
+
+    <RadioGroup
+        android:id="@+id/io"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="360dp"
+        android:focusable="false"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/income"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="入金"
+            tools:layout_editor_absoluteX="36dp"
+            tools:layout_editor_absoluteY="355dp" />
+
+        <RadioButton
+            android:id="@+id/expence"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:text="出金"
+            android:checked="true"
+            app:layout_constraintBaseline_toBaselineOf="@+id/income"
+            app:layout_constraintStart_toEndOf="@+id/income"
+            tools:layout_editor_absoluteX="108dp"
+            tools:layout_editor_absoluteY="353dp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="1"
+        android:text="@string/add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="347dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="128dp"
+        android:text="データを追加します"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

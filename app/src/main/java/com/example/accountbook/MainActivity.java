@@ -1,55 +1,133 @@
 package com.example.accountbook;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.content.DialogInterface;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import androidx.appcompat.app.AlertDialog;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView textView;
+    private TestOpenHelper helper;
+    private SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        textView = findViewById(R.id.text_view);
+
+        //readData();
+
+        /* 追加ボタン */
+        Button register = findViewById(R.id.add);
+        register.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, Add.class));
+            }
+        });
+
+        /* 更新ボタン */
+        Button update = findViewById(R.id.update);
+        update.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, com.example.accountbook.Update.class));
+            }
+        });
+
+        /* 削除ボタン */
+        Button delete = findViewById(R.id.delete);
+        delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, com.example.accountbook.Delete.class));
+            }
+        });
+
+        /* 全削除ボタン */
+        Button delete_all = findViewById(R.id.delete_all);
+        delete_all.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("データを全て削除してもよろしいですか？")
+                        .setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if(helper == null) { helper = new TestOpenHelper(getApplicationContext()); }
+                                SQLiteDatabase db = helper.getWritableDatabase();
+                                String sql = "delete from testdb";
+                                db.execSQL(sql);
+                                Toast.makeText(MainActivity.this, "全削除しました", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //全削除をキャンセル
+                            }
+                        });
+                // ダイアログの表示
+                builder.create().show();
+            }
+        });
+//
+        /* 表示ボタン */
+        Button display = findViewById(R.id.display);
+        display.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readData();
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    private void readData() {
+        if(helper == null) { helper = new TestOpenHelper(getApplicationContext()); }
+        db = helper.getReadableDatabase();
+        try {
+            Cursor cursor = db.query(
+                    "testdb",
+                    new String[]{"ie", "date", "contents", "price"},
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            cursor.moveToFirst();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+            StringBuilder sbuilder = new StringBuilder();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            for (int i = 0; i < cursor.getCount(); i++) {
+                sbuilder.append(cursor.getString(1));
+                sbuilder.append(":    ");
+                sbuilder.append(cursor.getString(0));
+                sbuilder.append("    ");
+                sbuilder.append(cursor.getString(2));
+                sbuilder.append("    ");
+                sbuilder.append(cursor.getInt(3));
+                sbuilder.append("円\n");
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            textView.setText(sbuilder.toString());
+        }catch(SQLiteException e){
+            Toast.makeText(MainActivity.this, "登録されているデータはありません", Toast.LENGTH_LONG).show();
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }
